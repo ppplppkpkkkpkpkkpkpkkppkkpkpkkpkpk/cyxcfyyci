@@ -1,0 +1,36 @@
+
+/**
+ * Get store data from the fortnite api and save it in a json file
+ *
+ * @param String $date of the store to save
+ *
+ * @return void
+ */
+function getStoreDataFromAPI( $date ) {
+    // store api endpoint, we hit those endpoints!
+    $apiUrlEndpointStore = 'https://api.fortnitetracker.com/v1/store';
+ 
+    // curl setup
+    $ch = curl_init();
+    
+    // specify the store endpoint
+    curl_setopt( $ch, CURLOPT_URL, $apiUrlEndpointStore );
+ 
+    // pass our api key along as the TRN-Api-Key header
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
+        'TRN-Api-Key:' . FN_API_KEY
+    ) );
+ 
+    // set a few other things to make curl happy
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
+    curl_setopt( $ch, CURLOPT_HEADER, FALSE );
+    curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+		
+    // response from the store endpoint
+    $response = curl_exec( $ch );
+ 
+    // create a file titled 'YYYY-MM-DD' and save the json repsonse to the file
+    $storeFile = fopen( 'store_json_files/' . $date . '.json', 'w' );
+    fwrite( $storeFile, $response );
+    fclose( $storeFile );
+}
